@@ -94,32 +94,38 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isModalSubmit()) return;
 
     if (interaction.customId === 'schedule_modal') {
-        const title = interaction.fields.getTextInputValue('title_input');
-        const schedule = interaction.fields.getTextInputValue('schedule_input');
-        const job = interaction.fields.getTextInputValue('job_input');
-        const requirement = interaction.fields.getTextInputValue('requirement_input');
-        const description = interaction.fields.getTextInputValue('description_input');
+        try {
+            const title = interaction.fields.getTextInputValue('title_input');
+            const schedule = interaction.fields.getTextInputValue('schedule_input');
+            const job = interaction.fields.getTextInputValue('job_input');
+            const requirement = interaction.fields.getTextInputValue('requirement_input');
+            const description = interaction.fields.getTextInputValue('description_input');
 
-        const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildForum);
-        
-        if (!channel) {
-            return interaction.reply('오락실-일정 채널을 찾을 수 없습니다.');
+            const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildForum);
+            
+            if (!channel) {
+                return interaction.reply('오락실-일정 채널을 찾을 수 없습니다.');
+            }
+
+            // 포럼 메시지 생성
+            await channel.send({
+                embeds: [{
+                    title: title,
+                    description: `일정: ${schedule}\n구인 직업 및 인원: ${job}\n요구조건: ${requirement}\n설명: ${description}`,
+                    color: 0x0099ff,
+                    timestamp: new Date(),
+                }]
+            });
+
+            await interaction.reply({ content: '일정이 생성되었습니다!', ephemeral: true });
+        } catch (error) {
+            console.error('Error sending message:', error);
+            await interaction.reply({ content: '메시지 전송 중 오류가 발생했습니다. 다시 시도해 주세요.', ephemeral: true });
         }
-
-        // 포럼 메시지 생성
-        await channel.send({
-            embeds: [{
-                title: title,
-                description: `일정: ${schedule}\n구인 직업 및 인원: ${job}\n요구조건: ${requirement}\n설명: ${description}`,
-                color: 0x0099ff,
-                timestamp: new Date(),
-            }]
-        });
-
-        await interaction.reply({ content: '일정이 생성되었습니다!', ephemeral: true });
     }
 });
 
 // 7. 시크릿키(토큰)을 통해 봇 로그인 실행
 client.login(token);
+
 
