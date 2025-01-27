@@ -179,8 +179,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 
-    const { ActionRowBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-
     if (interaction.isButton() && interaction.customId === 'apply_button') {
         const characterOptions = [
             '전사', '사제', '도적', '성기사', '사냥꾼',
