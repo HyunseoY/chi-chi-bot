@@ -176,9 +176,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-// 7. 시크릿키(토큰)을 통해 봇 로그인 실행
-client.login(token);
-
 // 8. 버튼 클릭 이벤트 처리 (신청하기, 신청취소, 모집마감, 글수정)
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isButton()) {
@@ -276,3 +273,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 });
+
+// 7. 시크릿키(토큰)을 통해 봇 로그인 실행
+client.login(token);
