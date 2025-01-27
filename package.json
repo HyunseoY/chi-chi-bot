@@ -1,0 +1,22 @@
+{
+  "name": "chi-chi-bot",
+  "version": "1.0.0",
+  "description": "bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HyunseoY/chi-chi-bot.git"
+  },
+  "author": "mogoe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HyunseoY/chi-chi-bot/issues"
+  },
+  "homepage": "https://github.com/HyunseoY/chi-chi-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.17.3"
+  }
+}
