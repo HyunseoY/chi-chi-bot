@@ -176,7 +176,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-// 8. 버튼 클릭 이벤트 처리 (신청하기, 신청취소, 모집마감, 글수정)
+// 7. 버튼 클릭 이벤트 처리 (신청하기, 신청취소, 모집마감, 글수정)
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isButton()) {
         const { customId } = interaction;
@@ -196,35 +196,35 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 .setLabel('일정제목')
                 .setStyle(TextInputStyle.Short)
                 .setRequired(true)
-                .setValue(embed.title); // 기존 제목으로 초기화
+                .setValue(embed.title || ''); // 기존 제목으로 초기화, 없으면 빈 문자열
 
             const scheduleInput = new TextInputBuilder()
                 .setCustomId('edit_schedule_input')
                 .setLabel('일시')
                 .setStyle(TextInputStyle.Short)
                 .setRequired(true)
-                .setValue(embed.fields[0].value.trim()); // 기존 일시로 초기화
+                .setValue(embed.fields[0]?.value.trim() || ''); // 기존 일시로 초기화, 없으면 빈 문자열
 
             const jobInput = new TextInputBuilder()
                 .setCustomId('edit_job_input')
                 .setLabel('구인직업 및 인원')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
-                .setValue(embed.fields[1].value.trim()); // 기존 구인직업으로 초기화
+                .setValue(embed.fields[1]?.value.trim() || ''); // 기존 구인직업으로 초기화, 없으면 빈 문자열
 
             const requirementInput = new TextInputBuilder()
                 .setCustomId('edit_requirement_input')
                 .setLabel('요구조건')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
-                .setValue(embed.fields[2].value.trim()); // 기존 요구조건으로 초기화
+                .setValue(embed.fields[2]?.value.trim() || ''); // 기존 요구조건으로 초기화, 없으면 빈 문자열
 
             const descriptionInput = new TextInputBuilder()
                 .setCustomId('edit_description_input')
                 .setLabel('설명')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(false)
-                .setValue(embed.fields[3].value.trim()); // 기존 설명으로 초기화
+                .setValue(embed.fields[3]?.value.trim() || ''); // 기존 설명으로 초기화, 없으면 빈 문자열
 
             // 입력 필드를 모달에 추가
             editModal.addComponents(
@@ -241,7 +241,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-// 9. 수정된 일정 제출 이벤트 처리
+// 8. 수정된 일정 제출 이벤트 처리
 client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isModalSubmit()) return;
 
@@ -274,5 +274,5 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-// 7. 시크릿키(토큰)을 통해 봇 로그인 실행
+// 9. 시크릿키(토큰)을 통해 봇 로그인 실행
 client.login(token);
