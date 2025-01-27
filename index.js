@@ -121,6 +121,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } catch (error) {
             console.error('Error sending message:', error);
             await interaction.reply({ content: '메시지 전송 중 오류가 발생했습니다. 다시 시도해 주세요.', ephemeral: true });
+    
         }
     }
 });
