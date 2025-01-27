@@ -29,14 +29,18 @@ client.on(Events.MessageCreate, async (message) => {
                     .setStyle(ButtonStyle.Primary),
             );
 
-        await message.channel.send({
-            content: '**일정 생성 방법**\n' + // 굵은 글씨
-                   '1️⃣ | 생성하려는 일정 타입을 선택합니다.\n' +
-                   '2️⃣ | 제공된 양식에 맞춰 파티 정보를 작성하신 뒤, 전송 버튼을 눌러주세요.\n' +
-                   '3️⃣ | 전송한 글은 [🎪︱오락실︱일정](https://discord.com/channels/1320079205802840065/1331474901189525564) 포럼에 포스트가 생성됩니다.\n' +
-                   '4️⃣ | 포스트에서 참여 및 인원을 관리할 수 있습니다.',
-            components: [buttonRow],
-        });
+            await message.channel.send({
+                embeds: [{
+                    title: '**일정 생성 방법**',
+                    description: `1️⃣ | 생성하려는 일정 타입을 선택합니다.\n` +
+                                 `2️⃣ | 제공된 양식에 맞춰 파티 정보를 작성하신 뒤, 전송 버튼을 눌러주세요.\n` +
+                                 `3️⃣ | 전송한 글은 🎪︱오락실︱일정 포럼에 포스트가 생성됩니다.\n` +
+                                 `4️⃣ | 포스트에서 참여 및 인원을 관리할 수 있습니다.\n\n`,
+                    color: 0x0099ff,
+                    timestamp: new Date(),
+                }],
+                components: [buttonRow],
+            });
     }
 });
 
