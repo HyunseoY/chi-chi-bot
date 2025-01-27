@@ -104,23 +104,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildForum);
             
             if (!channel) {
-                return interaction.reply('오락실-일정 채널을 찾을 수 없습니다.');
+                return interaction.reply({ content: '오락실-일정 채널을 찾을 수 없습니다.', ephemeral: true });
             }
 
-            // 포럼에 새 포스트 생성
+            // 포럼에 새 포스트 생성 및 메시지 전송
             const thread = await channel.threads.create({
                 name: title, // 스레드 제목
                 autoArchiveDuration: 60, // 60분 후 자동 아카이브
                 reason: '일정 생성',
-            });
-
-            // 포스트 내용 전송
-            await thread.send({
-                embeds: [{
-                    description: `일정: ${schedule}\n구인 직업 및 인원: ${job}\n요구조건: ${requirement}\n설명: ${description}`,
-                    color: 0x0099ff,
-                    timestamp: new Date(),
-                }]
+                message: {
+                    embeds: [{
+                        description: `일정: ${schedule}\n구인 직업 및 인원: ${job}\n요구조건: ${requirement}\n설명: ${description}`,
+                        color: 0x0099ff,
+                        timestamp: new Date(),
+                    }]
+                }
             });
 
             await interaction.reply({ content: '일정이 생성되었습니다!', ephemeral: true });
