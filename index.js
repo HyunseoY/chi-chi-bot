@@ -49,19 +49,19 @@ client.on(Events.InteractionCreate, async (interaction) => {
     const titleInput = new TextInputBuilder()
         .setCustomId('title_input')
         .setLabel('일정 제목')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(TextInputStyle.Paragraph)
         .setRequired(true);
 
     const scheduleInput = new TextInputBuilder()
         .setCustomId('schedule_input')
-        .setLabel('일정')
+        .setLabel('일시')
         .setStyle(TextInputStyle.Paragraph)
         .setRequired(true);
 
     const jobInput = new TextInputBuilder()
         .setCustomId('job_input')
-        .setLabel('구인 직업 및 인원')
-        .setStyle(TextInputStyle.Short)
+        .setLabel('구인직업 및 인원')
+        .setStyle(TextInputStyle.Paragraph)
         .setRequired(true);
 
     const requirementInput = new TextInputBuilder()
@@ -114,7 +114,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 reason: '일정 생성',
                 message: {
                     embeds: [{
-                        description: `일정: ${schedule}\n구인 직업 및 인원: ${job}\n요구조건: ${requirement}\n설명: ${description}`,
+                        description: `🎺일정: ${schedule}\n구인 직업 및 인원: ${job}\n요구조건: ${requirement}\n설명: ${description}`,
                         color: 0x0099ff,
                         timestamp: new Date(),
                     }]
