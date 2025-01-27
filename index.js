@@ -125,17 +125,34 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
 
            // 포럼에 새 포스트 생성 및 메시지 전송
-            const thread = await channel.threads.create({
-                name: `${schedule}︱${title}`,
-                autoArchiveDuration: 60,
-                reason: '일정 생성',
-                message: {
-                    embeds: [{
-                        description: `\`\`\`⏰일시\`\`\`${schedule}\n\n \`\`\`🙋‍♂️구인직업 및 인원\`\`\`${job}\n\n \`\`\`✅요구조건\`\`\`${requirement}\n\n \`\`\`📝설명\`\`\` ${description}`,
-                        color: 0x0099ff,
-                    }]
-                }
-            });
+           const thread = await channel.threads.create({
+            name: `${schedule}︱${title}`,
+            autoArchiveDuration: 60,
+            reason: '일정 생성',
+            message: {
+                embeds: [{
+                    title: title, // 제목을 강조하기 위해 title 필드 사용
+                    description: `**파티 참여를 원하신다면 신청하기 버튼을 눌러주세요**\n\n${description}`, // 추가 문구와 description 포함
+                    fields: [
+                        {
+                            name: '⏰일시',
+                            value: schedule,
+                            inline: true
+                        },
+                        {
+                            name: '🙋‍♂️구인직업 및 인원',
+                            value: job,
+                            inline: true
+                        },
+                        {
+                            name: '✅요구조건',
+                            value: requirement,
+                            inline: true
+                        }
+                    ],
+                }]
+            }
+        });
 
             await interaction.reply({ content: '일정이 생성되었습니다!', ephemeral: true });
         } catch (error) {
