@@ -136,18 +136,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     fields: [
                         {
                             name: '⏰일시',
-                            value: schedule,
+                            value: `${schedule}\n\n`,
                         },
                         {
                             name: '🙋‍♂️구인직업 및 인원',
-                            value: job,
+                            value: `${job}\n\n`, 
                         },
                         {
                             name: '✅요구조건',
-                            value: requirement,
+                            value: `${requirement}\n\n`, 
                         },{
                             name: '📝설명',
-                            value: description,
+                            value: `${description}\n\n`,
                         }
                     ],
                 }]
