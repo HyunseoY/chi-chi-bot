@@ -47,16 +47,6 @@ client.on(Events.MessageCreate, async (message) => {
 client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isButton()) return;
 
-    // 포스트 목록을 가져오는 함수
-    const getPosts = async (channel) => {
-        const threads = await channel.threads.fetch();
-        return threads.threads.map(thread => ({
-            id: thread.id,
-            name: thread.name,
-            message: thread.lastMessage?.content || '내용 없음',
-        }));
-    };
-
     // 모달 생성
     const modal = new ModalBuilder()
         .setCustomId('schedule_modal')
