@@ -1,5 +1,5 @@
 // 1. 주요 클래스 가져오기
-const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageActionRow } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const { token } = require('./config.json');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
@@ -154,27 +154,27 @@ client.on(Events.InteractionCreate, async (interaction) => {
                         color: 0x0099ff,
                     }],
                     components: [
-                        new MessageActionRow()
+                        new ActionRowBuilder()
                             .addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('apply_button')
                                     .setLabel('신청하기')
-                                    .setStyle('PRIMARY'),
+                                    .setStyle(ButtonStyle.Primary),
                                 new ButtonBuilder()
                                     .setCustomId('cancel_button')
                                     .setLabel('신청취소')
-                                    .setStyle('SECONDARY'),
+                                    .setStyle(ButtonStyle.Danger),
                                 new ButtonBuilder()
                                     .setCustomId('close_recruitment_button')
                                     .setLabel('모집마감')
-                                    .setStyle('DANGER'),
+                                    .setStyle(ButtonStyle.Secondary),
                                 new ButtonBuilder()
-                                    .setCustomId('edit_post_button')
+                                    .setCustomId('edit_button')
                                     .setLabel('글수정')
-                                    .setStyle('SECONDARY')
-                                    .setDisabled(interaction.user.id !== thread.ownerId) // 작성자만 클릭 가능
+                                    .setStyle(ButtonStyle.Success)
+                                    .setDisabled(interaction.user.id !== interaction.user.id) // 작성자만 클릭 가능
                             )
-                    ]
+                    ],
                 }
             });
 
@@ -186,6 +186,103 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-
 // 7. 시크릿키(토큰)을 통해 봇 로그인 실행
 client.login(token);
+
+// 8. 버튼 클릭 이벤트 처리 (신청하기, 신청취소, 모집마감, 글수정)
+client.on(Events.InteractionCreate, async (interaction) => {
+    if (interaction.isButton()) {
+        const { customId } = interaction;
+
+        if (customId === 'edit_button') {
+            const thread = interaction.channel; // 현재 스레드
+            const embed = thread.lastMessage.embeds[0]; // 마지막 메시지의 임베드
+
+            // 모달 생성
+            const editModal = new ModalBuilder()
+                .setCustomId('edit_schedule_modal')
+                .setTitle('일정 수정');
+
+            // 텍스트 입력 필드 추가
+            const titleInput = new TextInputBuilder()
+                .setCustomId('edit_title_input')
+                .setLabel('일정제목')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+                .setValue(embed.title); // 기존 제목으로 초기화
+
+            const scheduleInput = new TextInputBuilder()
+                .setCustomId('edit_schedule_input')
+                .setLabel('일시')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+                .setValue(embed.fields[0].value.trim()); // 기존 일시로 초기화
+
+            const jobInput = new TextInputBuilder()
+                .setCustomId('edit_job_input')
+                .setLabel('구인직업 및 인원')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true)
+                .setValue(embed.fields[1].value.trim()); // 기존 구인직업으로 초기화
+
+            const requirementInput = new TextInputBuilder()
+                .setCustomId('edit_requirement_input')
+                .setLabel('요구조건')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true)
+                .setValue(embed.fields[2].value.trim()); // 기존 요구조건으로 초기화
+
+            const descriptionInput = new TextInputBuilder()
+                .setCustomId('edit_description_input')
+                .setLabel('설명')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(false)
+                .setValue(embed.fields[3].value.trim()); // 기존 설명으로 초기화
+
+            // 입력 필드를 모달에 추가
+            editModal.addComponents(
+                new ActionRowBuilder().addComponents(titleInput),
+                new ActionRowBuilder().addComponents(scheduleInput),
+                new ActionRowBuilder().addComponents(jobInput),
+                new ActionRowBuilder().addComponents(requirementInput),
+                new ActionRowBuilder().addComponents(descriptionInput),
+            );
+
+            // 모달 표시
+            await interaction.showModal(editModal);
+        }
+    }
+});
+
+// 9. 수정된 일정 제출 이벤트 처리
+client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isModalSubmit()) return;
+
+    if (interaction.customId === 'edit_schedule_modal') {
+        try {
+            const title = interaction.fields.getTextInputValue('edit_title_input');
+            const schedule = interaction.fields.getTextInputValue('edit_schedule_input');
+            const job = interaction.fields.getTextInputValue('edit_job_input');
+            const requirement = interaction.fields.getTextInputValue('edit_requirement_input');
+            const description = interaction.fields.getTextInputValue('edit_description_input');
+
+            const thread = interaction.channel; // 현재 스레드
+            const embed = thread.lastMessage.embeds[0]; // 마지막 메시지의 임베드
+
+            // 임베드 수정
+            embed.title = title;
+            embed.fields[0].value = `${schedule}\n\n`;
+            embed.fields[1].value = `${job}\n\n`;
+            embed.fields[2].value = `${requirement}\n\n`;
+            embed.fields[3].value = `${description}\n\n`;
+
+            // 메시지 수정
+            await thread.lastMessage.edit({ embeds: [embed] });
+
+            await interaction.reply({ content: '일정이 수정되었습니다!', ephemeral: true });
+        } catch (error) {
+            console.error('Error editing thread or sending message:', error);
+            await interaction.reply({ content: '수정 중 오류가 발생했습니다. 다시 시도해 주세요.', ephemeral: true });
+        }
+    }
+});
