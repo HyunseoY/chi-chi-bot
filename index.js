@@ -1,13 +1,15 @@
 // 1. 주요 클래스 가져오기
-const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder } = require('discord.js');
 const { token } = require('./config.json');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
-const client = new Client({ intents: [
-    GatewayIntentBits.Guilds, 
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-]});
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ]
+});
 
 // 3. 봇이 준비됐을때 한번만(once) 표시할 메시지
 client.once(Events.ClientReady, readyClient => {
@@ -29,17 +31,17 @@ client.on(Events.MessageCreate, async (message) => {
                     .setStyle(ButtonStyle.Success),
             );
 
-            await message.channel.send({
-                embeds: [{
-                    title: '**일정 생성 방법**',
-                    description: `1️⃣  생성하려는 일정 타입을 선택합니다.\n\n` + // 줄바꿈 추가
-                                 `2️⃣  제공된 양식에 맞춰 파티 정보를 작성하신 뒤, 전송 버튼을 눌러주세요.\n\n` + // 줄바꿈 추가
-                                 `3️⃣  전송한 글은 🎪︱오락실︱일정 포럼에 포스트가 생성됩니다.\n\n` + // 줄바꿈 추가
-                                 `4️⃣  포스트에서 참여 및 인원을 관리할 수 있습니다.\n\n`,
-                    color: 0x0099ff,
-                }],
-                components: [buttonRow],
-            });
+        await message.channel.send({
+            embeds: [{
+                title: '**일정 생성 방법**',
+                description: `1️⃣  생성하려는 일정 타입을 선택합니다.\n\n` + // 줄바꿈 추가
+                    `2️⃣  제공된 양식에 맞춰 파티 정보를 작성하신 뒤, 전송 버튼을 눌러주세요.\n\n` + // 줄바꿈 추가
+                    `3️⃣  전송한 글은 🎪︱오락실︱일정 포럼에 포스트가 생성됩니다.\n\n` + // 줄바꿈 추가
+                    `4️⃣  포스트에서 참여 및 인원을 관리할 수 있습니다.\n\n`,
+                color: 0x0099ff,
+            }],
+            components: [buttonRow],
+        });
     }
 });
 
@@ -62,31 +64,41 @@ client.on(Events.InteractionCreate, async (interaction) => {
         .setCustomId('title_input')
         .setLabel('일정제목')
         .setStyle(TextInputStyle.Short)
-        .setRequired(true);
+        .setRequired(true)
+        .setPlaceholder('생성하려는 일정의 제목을 입력해주세요')
+        .setMaxLength(50);
 
     const scheduleInput = new TextInputBuilder()
         .setCustomId('schedule_input')
         .setLabel('일시')
         .setStyle(TextInputStyle.Short)
-        .setRequired(true);
+        .setRequired(true)
+        .setPlaceholder('작성양식: 0월 0일 0요일 오전/오후 00시')
+        .setMaxLength(50);
 
     const jobInput = new TextInputBuilder()
         .setCustomId('job_input')
         .setLabel('구인직업 및 인원')
         .setStyle(TextInputStyle.Paragraph)
-        .setRequired(true);
+        .setRequired(true)
+        .setPlaceholder('예: 탱 2, 힐 4, 딜 14')
+        .setMaxLength(50);
 
     const requirementInput = new TextInputBuilder()
         .setCustomId('requirement_input')
         .setLabel('요구조건')
         .setStyle(TextInputStyle.Paragraph)
-        .setRequired(true);
+        .setRequired(true)
+        .setPlaceholder('예: 600+ 아이템 레벨')
+        .setMaxLength(50);
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId('description_input')
         .setLabel('설명')
         .setStyle(TextInputStyle.Paragraph)
-        .setRequired(false);
+        .setRequired(false)
+        .setPlaceholder('추가적인 설명을 입력하세요')
+        .setMaxLength(500);
 
     // 입력 필드를 모달에 추가
     modal.addComponents(
@@ -115,7 +127,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const description = interaction.fields.getTextInputValue('description_input');
 
             const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildForum);
-            
+
             if (!channel) {
                 return interaction.reply({ content: '오락실-일정 채널을 찾을 수 없습니다.', ephemeral: true });
             }
@@ -129,7 +141,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 message: {
                     embeds: [{
                         title: title,
-                        description: `파티 참여를 원하신다면 신청하기 버튼을 눌러주세요`,
+                        description: `파티 참여를 원하신다면 댓글을 남겨주세요!`,
                         fields: [
                             {
                                 name: '⏰일시',
@@ -137,11 +149,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
                             },
                             {
                                 name: '🙋‍♂️구인직업 및 인원',
-                                value: job, 
+                                value: job,
                             },
                             {
                                 name: '✅요구조건',
-                                value: requirement, 
+                                value: requirement,
                             },
                             {
                                 name: '📝설명',
@@ -150,7 +162,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                         ],
                         color: 0x0099ff,
                     }],
-                    components: [
+                    /*components: [
                         new ActionRowBuilder()
                             .addComponents(
                                 new ButtonBuilder()
@@ -166,11 +178,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
                                     .setLabel('종료')
                                     .setStyle(ButtonStyle.Secondary),
                             )
-                    ],
+                    ],*/
                 }
             });
 
-            await interaction.reply({ content: '일정이 생성되었습니다!', ephemeral: true });
+            await interaction.reply({ content: '일정이 생성되었습니다!', flags: 64 });
         } catch (error) {
             console.error('Error creating thread or sending message:', error);
             if (!interaction.replied) {
@@ -179,40 +191,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 
-    // 드롭다운 선택 처리
-    if (interaction.isStringSelectMenu()) {
-        const selectedCharacter = interaction.values[0];
-        const newJobOptions = jobOptions[selectedCharacter] || [];
-        
-        const jobSelectMenu = new StringSelectMenuBuilder()
-            .setCustomId('job_select')
-            .setPlaceholder('특성 선택')
-            .addOptions(newJobOptions.map((job) => ({
-                label: job,
-                value: job,
-            })));
-
-        const row2 = new ActionRowBuilder().addComponents(jobSelectMenu);
-
-        await interaction.update({
-            content: '신청하려는 캐릭터를 선택해주세요.',
-            components: [row1, row2, inputRow]
-        });
-    }
-
-    // 입력값 처리
-    if (interaction.isTextInput()) {
-        const inputValue = interaction.fields.getTextInputValue('input_value');
-        const selectedJob = interaction.values[0]; // 오른쪽 드롭다운의 선택값
-
-        if (selectedJob && inputValue) {
-            const messageContent = `${selectedJob}︱${inputValue}`;
-            await interaction.channel.send(messageContent);
-        }
-    }
-    
-
-    // 종료 버튼 처리
+    /*// 종료 버튼 처리
     if (interaction.isButton() && interaction.customId === 'close_recruitment_button') {
         const thread = interaction.channel; // 현재 채널(스레드)을 가져옴
 
@@ -221,20 +200,20 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 // 태그를 '마감'으로 변경
                 await thread.setAppliedTags(['1333436022935261206']); // 마감 태그 ID로 변경
                 if (!interaction.replied) {
-                    await interaction.reply({ content: '포스트의 태그가 "마감"으로 변경되었습니다.', ephemeral: true });
+                    await interaction.reply({ content: '포스트의 태그가 "마감"으로 변경되었습니다.', flags: 64 }); // ephemeral을 flags로 변경
                 }
             } catch (error) {
                 console.error('Error updating thread tags:', error);
                 if (!interaction.replied) {
-                    await interaction.reply({ content: '태그 변경 중 오류가 발생했습니다. 다시 시도해 주세요.', ephemeral: true });
+                    await interaction.reply({ content: '태그 변경 중 오류가 발생했습니다. 다시 시도해 주세요.', flags: 64 }); // ephemeral을 flags로 변경
                 }
             }
         } else {
             if (!interaction.replied) {
-                await interaction.reply({ content: '이 포스트는 이미 마감되었습니다.', ephemeral: true });
+                await interaction.reply({ content: '이 포스트는 이미 마감되었습니다.', flags: 64 }); // ephemeral을 flags로 변경
             }
         }
-    }
+    }*/
 });
 
 
