@@ -1,5 +1,5 @@
 // 1. 주요 클래스 가져오기
-const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle,MessageActionRow } = require('discord.js');
 const { token } = require('./config.json');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
@@ -65,7 +65,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     // 텍스트 입력 필드 추가
     const titleInput = new TextInputBuilder()
         .setCustomId('title_input')
-        .setLabel('일정 제목')
+        .setLabel('일정제목')
         .setStyle(TextInputStyle.Short)
         .setRequired(true);
 
@@ -124,35 +124,59 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 return interaction.reply({ content: '오락실-일정 채널을 찾을 수 없습니다.', ephemeral: true });
             }
 
-           // 포럼에 새 포스트 생성 및 메시지 전송
-           const thread = await channel.threads.create({
-            name: `${schedule}︱${title}`,
-            autoArchiveDuration: 60,
-            reason: '일정 생성',
-            message: {
-                embeds: [{
-                    title: title, // 제목을 강조하기 위해 title 필드 사용
-                    description: `**파티 참여를 원하신다면 신청하기 버튼을 눌러주세요**`, // 추가 문구와 description 포함
-                    fields: [
-                        {
-                            name: '⏰일시',
-                            value: `${schedule}\n\n`,
-                        },
-                        {
-                            name: '🙋‍♂️구인직업 및 인원',
-                            value: `${job}\n\n`, 
-                        },
-                        {
-                            name: '✅요구조건',
-                            value: `${requirement}\n\n`, 
-                        },{
-                            name: '📝설명',
-                            value: `${description}\n\n`,
-                        }
-                    ],
-                }]
-            }
-        });
+            // 포럼에 새 포스트 생성 및 메시지 전송
+            const thread = await channel.threads.create({
+                name: `${schedule}︱${title}`,
+                autoArchiveDuration: 60,
+                reason: '일정 생성',
+                message: {
+                    embeds: [{
+                        title: title,
+                        description: `**파티 참여를 원하신다면 신청하기 버튼을 눌러주세요**`,
+                        fields: [
+                            {
+                                name: '⏰일시',
+                                value: `${schedule}\n\n`,
+                            },
+                            {
+                                name: '🙋‍♂️구인직업 및 인원',
+                                value: `${job}\n\n`, 
+                            },
+                            {
+                                name: '✅요구조건',
+                                value: `${requirement}\n\n`, 
+                            },
+                            {
+                                name: '📝설명',
+                                value: `${description}\n\n`,
+                            }
+                        ],
+                        color: 0x0099ff,
+                    }],
+                    components: [
+                        new MessageActionRow()
+                            .addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('apply_button')
+                                    .setLabel('신청하기')
+                                    .setStyle('PRIMARY'),
+                                new ButtonBuilder()
+                                    .setCustomId('cancel_button')
+                                    .setLabel('신청취소')
+                                    .setStyle('SECONDARY'),
+                                new ButtonBuilder()
+                                    .setCustomId('close_recruitment_button')
+                                    .setLabel('모집마감')
+                                    .setStyle('DANGER'),
+                                new ButtonBuilder()
+                                    .setCustomId('edit_post_button')
+                                    .setLabel('글수정')
+                                    .setStyle('SECONDARY')
+                                    .setDisabled(interaction.user.id !== thread.ownerId) // 작성자만 클릭 가능
+                            )
+                    ]
+                }
+            });
 
             await interaction.reply({ content: '일정이 생성되었습니다!', ephemeral: true });
         } catch (error) {
@@ -160,6 +184,58 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await interaction.reply({ content: '메시지 전송 중 오류가 발생했습니다. 다시 시도해 주세요.', ephemeral: true });
         }
     }
+// 버튼 클릭 이벤트 처리
+if (interaction.isButton()) {
+    const { customId } = interaction;
+
+    if (customId === 'edit_post_button') {
+        // 글수정 모달 생성
+        const modal = new ModalBuilder()
+            .setCustomId('edit_post_modal')
+            .setTitle('글 수정');
+
+        // 입력 필드 추가
+        modal.addComponents(
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('title_input')
+                    .setLabel('일정정제목')
+                    .setValue(interaction.message.embeds[0].title)
+                    .setStyle('SHORT'),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('schedule_input')
+                    .setLabel('일시')
+                    .setValue(interaction.message.fields[0].value)
+                    .setStyle('SHORT'),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('job_input')
+                    .setLabel('구인직업 및 인원')
+                    .setValue(interaction.message.fields[0].value)
+                    .setStyle('PARAGRAPH'),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('requirement_input')
+                    .setLabel('요구조건')
+                    .setValue(interaction.message.fields[0].value)
+                    .setStyle('PARAGRAPH'),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('description_input')
+                    .setLabel('설명')
+                    .setValue(interaction.message.fields[0].value)
+                    .setStyle('PARAGRAPH'),
+            ),
+        );
+
+        await interaction.showModal(modal);
+    }
+}
 });
 
 
