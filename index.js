@@ -132,22 +132,22 @@ client.on(Events.InteractionCreate, async (interaction) => {
             message: {
                 embeds: [{
                     title: title, // 제목을 강조하기 위해 title 필드 사용
-                    description: `**파티 참여를 원하신다면 신청하기 버튼을 눌러주세요**\n\n${description}`, // 추가 문구와 description 포함
+                    description: `**파티 참여를 원하신다면 신청하기 버튼을 눌러주세요**`, // 추가 문구와 description 포함
                     fields: [
                         {
                             name: '⏰일시',
                             value: schedule,
-                            inline: true
                         },
                         {
                             name: '🙋‍♂️구인직업 및 인원',
                             value: job,
-                            inline: true
                         },
                         {
                             name: '✅요구조건',
                             value: requirement,
-                            inline: true
+                        },{
+                            name: '📝설명',
+                            value: description,
                         }
                     ],
                 }]
