@@ -179,7 +179,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 
-    if (interaction.isButton() && interaction.customId === 'apply_button') {
+    /*if (interaction.isButton() && interaction.customId === 'apply_button') {
         const characterOptions = [
             '전사', '사제', '도적', '성기사', '사냥꾼',
             '주술사', '마법사', '흑마법사', '드루이드', '죽음의기사',
@@ -237,7 +237,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             ephemeral: true,
             components: [row1, row2, inputRow]
         });
-    }
+    }*/
 
     // 드롭다운 선택 처리
     if (interaction.isStringSelectMenu()) {
