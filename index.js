@@ -116,7 +116,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
             // 포럼에 새 포스트 생성 및 메시지 전송
             const thread = await channel.threads.create({
-                name: title, // 스레드 제목
+                name: `${schedule}︱${title}`, // 스레드 제목에 schedule_input과 title_input 결합
                 autoArchiveDuration: 60, // 60분 후 자동 아카이브
                 reason: '일정 생성',
                 message: {
@@ -135,6 +135,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 });
+
 
 // 7. 시크릿키(토큰)을 통해 봇 로그인 실행
 client.login(token);
