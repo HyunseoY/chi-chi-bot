@@ -123,7 +123,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     embeds: [{
                         description: `\`\`\`css\n⏰일시: ${schedule}\n\n🙋‍♂️구인직업 및 인원: ${job}\n\n✅요구조건: ${requirement}\n\n📝설명: ${description}\n\`\`\``,
                         color: 0x0099ff,
-                        timestamp: new Date(),
                     }]
                 }
             });
