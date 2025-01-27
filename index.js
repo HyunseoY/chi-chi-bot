@@ -1,5 +1,5 @@
 // 1. 주요 클래스 가져오기
-const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle,MessageActionRow } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageActionRow } = require('discord.js');
 const { token } = require('./config.json');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
@@ -184,58 +184,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await interaction.reply({ content: '메시지 전송 중 오류가 발생했습니다. 다시 시도해 주세요.', ephemeral: true });
         }
     }
-// 버튼 클릭 이벤트 처리
-if (interaction.isButton()) {
-    const { customId } = interaction;
-
-    if (customId === 'edit_post_button') {
-        // 글수정 모달 생성
-        const modal = new ModalBuilder()
-            .setCustomId('edit_post_modal')
-            .setTitle('글 수정');
-
-        // 입력 필드 추가
-        modal.addComponents(
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId('title_input')
-                    .setLabel('일정정제목')
-                    .setValue(interaction.message.embeds[0].title)
-                    .setStyle('SHORT'),
-            ),
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId('schedule_input')
-                    .setLabel('일시')
-                    .setValue(interaction.message.fields[0].value)
-                    .setStyle('SHORT'),
-            ),
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId('job_input')
-                    .setLabel('구인직업 및 인원')
-                    .setValue(interaction.message.fields[0].value)
-                    .setStyle('PARAGRAPH'),
-            ),
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId('requirement_input')
-                    .setLabel('요구조건')
-                    .setValue(interaction.message.fields[0].value)
-                    .setStyle('PARAGRAPH'),
-            ),
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId('description_input')
-                    .setLabel('설명')
-                    .setValue(interaction.message.fields[0].value)
-                    .setStyle('PARAGRAPH'),
-            ),
-        );
-
-        await interaction.showModal(modal);
-    }
-}
 });
 
 
