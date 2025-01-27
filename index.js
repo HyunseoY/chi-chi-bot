@@ -100,7 +100,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const requirement = interaction.fields.getTextInputValue('requirement_input');
         const description = interaction.fields.getTextInputValue('description_input');
 
-        const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildText);
+        const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildForum);
         
         if (!channel) {
             return interaction.reply('오락실-일정 채널을 찾을 수 없습니다.');
