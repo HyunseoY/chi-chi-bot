@@ -187,7 +187,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             '주술사', '마법사', '흑마법사', '드루이드', '죽음의기사',
             '수도사', '악마사냥꾼', '기원사'
         ];
-    
+
         const jobOptions = {
             '전사': ['무기', '분노', '방어'],
             '사제': ['수양', '신성', '암흑'],
@@ -203,29 +203,29 @@ client.on(Events.InteractionCreate, async (interaction) => {
             '악마사냥꾼': ['복수', '파멸'],
             '기원사': ['황폐', '보존', '증강'],
         };
-    
+
         const row1 = new ActionRowBuilder()
             .addComponents(
                 new StringSelectMenuBuilder()
                     .setCustomId('character_select')
-                    .setPlaceholder('직업선택')
+                    .setPlaceholder('직업 선택')
                     .addOptions(characterOptions.map((char) => ({
                         label: char,
                         value: char,
                     })))
             );
-    
+
         const row2 = new ActionRowBuilder()
             .addComponents(
                 new StringSelectMenuBuilder()
                     .setCustomId('job_select')
-                    .setPlaceholder('특성선택')
+                    .setPlaceholder('특성 선택')
                     .addOptions(jobOptions[characterOptions[0]].map((job) => ({
                         label: job,
                         value: job,
                     })))
             );
-    
+
         const inputRow = new ActionRowBuilder()
             .addComponents(
                 new TextInputBuilder()
@@ -233,54 +233,41 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     .setLabel('입력값')
                     .setStyle(TextInputStyle.Short)
             );
-    
+
         await interaction.reply({
             content: '신청하려는 캐릭터를 선택해주세요.',
             ephemeral: true,
             components: [row1, row2, inputRow]
         });
     }
-    
+
     // 드롭다운 선택 처리
     if (interaction.isStringSelectMenu()) {
         const selectedCharacter = interaction.values[0];
-    
-        // 오른쪽 드롭다운의 옵션 업데이트
         const newJobOptions = jobOptions[selectedCharacter] || [];
+        
         const jobSelectMenu = new StringSelectMenuBuilder()
             .setCustomId('job_select')
-            .setPlaceholder('직업 선택')
+            .setPlaceholder('특성 선택')
             .addOptions(newJobOptions.map((job) => ({
                 label: job,
                 value: job,
             })));
-    
+
         const row2 = new ActionRowBuilder().addComponents(jobSelectMenu);
-    
+
         await interaction.update({
             content: '신청하려는 캐릭터를 선택해주세요.',
             components: [row1, row2, inputRow]
         });
     }
-    
+
     // 입력값 처리
     if (interaction.isTextInput()) {
         const inputValue = interaction.fields.getTextInputValue('input_value');
         const selectedJob = interaction.values[0]; // 오른쪽 드롭다운의 선택값
-    
+
         if (selectedJob && inputValue) {
-            const messageContent = `${selectedJob}︱${inputValue}`;
-            await interaction.channel.send(messageContent);
-        }
-    }
-    
-    // 드롭다운 선택 및 입력 처리
-    if (interaction.isStringSelectMenu()) {
-        const selectedCharacter = interaction.values[0];
-        const selectedJob = interaction.values[1]; // 오른쪽 드롭다운의 선택값
-        const inputValue = interaction.fields.getTextInputValue('input_value');
-    
-        if (selectedCharacter && selectedJob && inputValue) {
             const messageContent = `${selectedJob}︱${inputValue}`;
             await interaction.channel.send(messageContent);
         }
