@@ -121,8 +121,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 reason: '일정 생성',
                 message: {
                     embeds: [{
-                        description: `\`\`\`css\n⏰일시: ${schedule}\n\n🙋‍♂️구인직업 및 인원: ${job}\n\n✅요구조건: ${requirement}\n\n📝설명: ${description}\n\`\`\``,
+                        description: `\`\`\`css\n⏰일시: ${schedule}\n\`\`\`\n\n\`\`\`css\n🙋‍♂️구인직업 및 인원: ${job}\n\`\`\`\n\n\`\`\`css\n✅요구조건: ${requirement}\n\`\`\`\n\n\`\`\`css\n📝설명: ${description}\n\`\`\``,
                         color: 0x0099ff,
+                        timestamp: new Date(),
                     }]
                 }
             });
@@ -134,7 +135,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 });
-
 
 
 // 7. 시크릿키(토큰)을 통해 봇 로그인 실행
