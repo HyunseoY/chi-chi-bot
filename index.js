@@ -1,5 +1,5 @@
 // 1. 주요 클래스 가져오기
-const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder } = require('discord.js');
+const { Client, Events, GatewayIntentBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const { token } = require('./config.json');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
@@ -18,7 +18,7 @@ client.once(Events.ClientReady, readyClient => {
 
 // 4. '일정생성' 채널에 버튼 추가
 client.on(Events.MessageCreate, async (message) => {
-    if (message.channel.name === '일정생성' && !message.author.bot) {
+    if (message.channel.name === '📅︱일정생성' && !message.author.bot) {
         const buttonRow = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
@@ -36,7 +36,7 @@ client.on(Events.MessageCreate, async (message) => {
                 title: '**일정 생성 방법**',
                 description: `1️⃣  생성하려는 일정 타입을 선택합니다.\n\n` + // 줄바꿈 추가
                     `2️⃣  제공된 양식에 맞춰 파티 정보를 작성하신 뒤, 전송 버튼을 눌러주세요.\n\n` + // 줄바꿈 추가
-                    `3️⃣  전송한 글은 🎪︱오락실︱일정 포럼에 포스트가 생성됩니다.\n\n` + // 줄바꿈 추가
+                    `3️⃣  전송한 글은 <#1331474901189525564>에 포스트가 생성됩니다.\n\n` + // 줄바꿈 추가
                     `4️⃣  포스트에서 참여 및 인원을 관리할 수 있습니다.\n\n`,
                 color: 0x0099ff,
             }],
@@ -126,10 +126,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const requirement = interaction.fields.getTextInputValue('requirement_input');
             const description = interaction.fields.getTextInputValue('description_input');
 
-            const channel = interaction.guild.channels.cache.find(ch => ch.name === '오락실-일정' && ch.type === ChannelType.GuildForum);
+            const channel = interaction.guild.channels.cache.find(ch => ch.name === '1331474901189525564' && ch.type === ChannelType.GuildForum);
 
             if (!channel) {
-                return interaction.reply({ content: '오락실-일정 채널을 찾을 수 없습니다.', ephemeral: true });
+                return interaction.reply({ content: '채널을 찾을 수 없습니다.', ephemeral: true });
             }
 
             // 포럼에 새 포스트 생성 및 메시지 전송
@@ -137,7 +137,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 name: `${schedule}︱${title}`,
                 autoArchiveDuration: 60,
                 reason: '일정 생성',
-                appliedTags: ['1333436004211626075'], // 모집중 태그 ID 추가
+                appliedTags: ['1333363041370116136'], // 모집중 태그 ID 추가
                 message: {
                     embeds: [{
                         title: title,
