@@ -26,7 +26,7 @@ client.on(Events.MessageCreate, async (message) => {
                 new ButtonBuilder()
                     .setCustomId('event_button')
                     .setLabel('이벤트')
-                    .setStyle(ButtonStyle.Primary),
+                    .setStyle(ButtonStyle.Success),
             );
 
             await message.channel.send({
@@ -37,7 +37,6 @@ client.on(Events.MessageCreate, async (message) => {
                                  `3️⃣  전송한 글은 🎪︱오락실︱일정 포럼에 포스트가 생성됩니다.\n\n` + // 줄바꿈 추가
                                  `4️⃣  포스트에서 참여 및 인원을 관리할 수 있습니다.\n\n`,
                     color: 0x0099ff,
-                    timestamp: new Date(),
                 }],
                 components: [buttonRow],
             });
