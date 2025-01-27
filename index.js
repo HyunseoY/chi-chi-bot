@@ -179,66 +179,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 
-    /*if (interaction.isButton() && interaction.customId === 'apply_button') {
-        const characterOptions = [
-            '전사', '사제', '도적', '성기사', '사냥꾼',
-            '주술사', '마법사', '흑마법사', '드루이드', '죽음의기사',
-            '수도사', '악마사냥꾼', '기원사'
-        ];
-
-        const jobOptions = {
-            '전사': ['무기', '분노', '방어'],
-            '사제': ['수양', '신성', '암흑'],
-            '도적': ['암살', '무법', '잠행'],
-            '성기사': ['신성', '보호', '징벌'],
-            '사냥꾼': ['야수', '사격', '생존'],
-            '주술사': ['정기', '고양', '복원'],
-            '마법사': ['비전', '화염', '냉기'],
-            '흑마법사': ['고통', '악마', '파괴'],
-            '드루이드': ['조화', '야성', '수호', '회복'],
-            '죽음의기사': ['혈기', '냉기', '부정'],
-            '수도사': ['양조', '풍운', '운무'],
-            '악마사냥꾼': ['복수', '파멸'],
-            '기원사': ['황폐', '보존', '증강'],
-        };
-
-        const row1 = new ActionRowBuilder()
-            .addComponents(
-                new StringSelectMenuBuilder()
-                    .setCustomId('character_select')
-                    .setPlaceholder('직업 선택')
-                    .addOptions(characterOptions.map((char) => ({
-                        label: char,
-                        value: char,
-                    })))
-            );
-
-        const row2 = new ActionRowBuilder()
-            .addComponents(
-                new StringSelectMenuBuilder()
-                    .setCustomId('job_select')
-                    .setPlaceholder('특성 선택')
-                    .addOptions(jobOptions[characterOptions[0]].map((job) => ({
-                        label: job,
-                        value: job,
-                    })))
-            );
-
-        const inputRow = new ActionRowBuilder()
-            .addComponents(
-                new TextInputBuilder()
-                    .setCustomId('input_value')
-                    .setLabel('입력값')
-                    .setStyle(TextInputStyle.Short)
-            );
-
-        await interaction.reply({
-            content: '신청하려는 캐릭터를 선택해주세요.',
-            ephemeral: true,
-            components: [row1, row2, inputRow]
-        });
-    }*/
-
     // 드롭다운 선택 처리
     if (interaction.isStringSelectMenu()) {
         const selectedCharacter = interaction.values[0];
