@@ -165,6 +165,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         });
       }
 
+      const authorNickname =
+        interaction.member.nickname || interaction.user.username; // 서버별명이 없으면 기본 사용자 이름 사용
+
       // 포럼에 새 포스트 생성 및 메시지 전송
       const thread = await channel.threads.create({
         name: `${schedule}︱${title}`,
@@ -196,7 +199,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
               ],
               color: 0x0099ff,
               author: {
-                name: interaction.user.username,
+                name: authorNickname,
                 icon_url: interaction.user.displayAvatarURL(),
               },
             },
