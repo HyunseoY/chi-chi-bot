@@ -790,7 +790,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 description: embedMessage.embeds[0].description || '', // 첫 번째 임베드의 설명
                 fields: embedMessage.embeds[0].fields || [], // 첫 번째 임베드의 필드
                 color: embedMessage.embeds[0].color || 0x0099ff, // 첫 번째 임베드의 색상
-                author: embedMessage.embeds[0].author, // 작성자 정보 유지
               },
               {
                 title: updatedTitle, // 업데이트된 타이틀 사용
@@ -822,7 +821,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
               description: embedMessage.embeds[0].description || '', // 첫 번째 임베드의 설명
               fields: embedMessage.embeds[0].fields || [], // 첫 번째 임베드의 필드
               color: embedMessage.embeds[0].color || 0x0099ff, // 첫 번째 임베드의 색상
-              author: embedMessage.embeds[0].author, // 작성자 정보 유지
             },
             {
               title: updatedTitle, // 업데이트된 타이틀 사용
